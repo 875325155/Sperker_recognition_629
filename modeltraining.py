@@ -1,4 +1,4 @@
-import Pickle
+import pickle
 import numpy as np
 from scipy.io.wavfile import read
 from sklearn.mixture import GMM 
@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore")
 
 #path to training data
 # source   = "development_set/"
-source   = "trainingData/"   
+source   = "Voxforge/"
 
 #path where training speakers will be saved
 
@@ -16,9 +16,8 @@ source   = "trainingData/"
 # train_file = "development_set_enroll.txt"
 
 dest = "Speakers_models/"
-train_file = "trainingDataPath.txt"        
+train_file = "trainingDataPath.txt"
 file_paths = open(train_file,'r')
-
 count = 1
 # Extracting features for each speaker (5 files per speakers)
 features = np.asarray(())
@@ -37,6 +36,7 @@ for path in file_paths:
     else:
         # np.vstack(): 在竖直方向上堆叠
         features = np.vstack((features, vector))
+    #疑问！！！ 为什么这里写5个，应该是15个啊
     # when features of 5 files of speaker are concatenated, then do model training
 	# -> if count == 5: --> edited below
     if count == 15:    
@@ -45,7 +45,7 @@ for path in file_paths:
         
         # dumping the trained gaussian model
         picklefile = path.split("-")[0]+".gmm"
-        Pickle.dump(gmm,open(dest + picklefile,'w'))
+        pickle.dump(gmm,open(dest + picklefile,'w'))
         print('+ modeling completed for speaker:',picklefile," with data point = ",features.shape)
         features = np.asarray(())
         count = 0
