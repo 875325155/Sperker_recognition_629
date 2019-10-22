@@ -3,3 +3,6 @@ git设置忽略文件和目录.pdf
 mfcc参数介绍.md
 Voxforge
 __pycache__
+/venv
+/.idea
+/.__pycache__

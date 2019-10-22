@@ -1,92 +1,63 @@
-import os
-import pickle
-import numpy as np
-from scipy.io.wavfile import read
-from featureextraction import extract_features
-#from speakerfeatures import extract_features
-import warnings
-warnings.filterwarnings("ignore")
-import time
+from tkinter import *
+from tkinter import ttk
+from PIL import Image, ImageTk
+from record_module import *
+from username import *
+from db import *
 
-"""
-#path to training data
-source   = "development_set/"   
-modelpath = "speaker_models/"
-test_file = "development_set_test.txt"        
-file_paths = open(test_file,'r')
+fname = "testfile.wav"
 
-"""
-#path to training data
-source   = "SampleData/"   
+class Testing_file:
+    def __init__(self):
+        root = Toplevel()
+        root.title("Speaker Recognition(Test)")
+        width = root.winfo_screenwidth()
+        height = root.winfo_screenheight()
+        root.geometry("%dx%d" % (width, height))
+        root.state('zoomed')
 
-#path where training speakers will be saved
-modelpath = "Speakers_models/"
+        ## Resizable Image
 
-gmm_files = [os.path.join(modelpath,fname) for fname in 
-              os.listdir(modelpath) if fname.endswith('.gmm')]
+        image = Image.open('bggif/1.gif')
+        global copy_of_image
+        copy_of_image = image.copy()
+        photo = ImageTk.PhotoImage(image)
+        global label
+        label = Label(root, image=photo)
+        label.place(x=0, y=0, relwidth=1, relheight=1)
+        label.bind('<Configure>', self.resize_image)
 
-#Load the Gaussian gender Models
-models    = [pickle.load(open(fname,'r')) for fname in gmm_files]
-speakers   = [fname.split("/")[-1].split(".gmm")[0] for fname 
-              in gmm_files]
+        ## Adding Buttons
 
-error = 0
-total_sample = 0.0
+        recording_button = Button(root, text="Record", bd=0, bg="black", fg="green", font=("Courier",35),command=record_audio)
+        recording_button.place(relx=0.5, rely=0.35, anchor=CENTER)
 
+        play_button = Button(root, text="Play", bd=0, bg="black", fg="green", font=("Courier",35),command=self.audioplay)
+        play_button.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-print ("Do you want to Test a Single Audio: Press '1' or The complete Test Audio Sample: Press '0' ?")
-take = int(raw_input().strip())
-if take == 1:
-	print ("Enter the File name from Test Audio Sample Collection :")
-	path = raw_input().strip()   
-    	print ("Testing Audio : ", path)
-    	sr,audio = read(source + path)
-    	vector   = extract_features(audio,sr)
-    
-    	log_likelihood = np.zeros(len(models)) 
-    
-    	for i in range(len(models)):
-        	gmm    = models[i]  #checking with each model one by one
-        	scores = np.array(gmm.score(vector))
-        	log_likelihood[i] = scores.sum()
-    
-    	winner = np.argmax(log_likelihood)
-    	print ("\tdetected as - ", speakers[winner])
+        test_button = Button(root, text="Test", bd=0, bg="black", fg="green", font=("Courier",35),command = self.testaudio)
+        test_button.place(relx=0.5, rely=0.65, anchor=CENTER)
 
-    	time.sleep(1.0)
-elif take == 0:
-	test_file = "testSamplePath.txt"        
-	file_paths = open(test_file,'r')
+        root.mainloop()
 
 
-	# Read the test directory and get the list of test audio files 
-	for path in file_paths:   
-    
-    		total_sample += 1.0
-    		path = path.strip()   
-    		print ("Testing Audio : ", path)
-    		sr,audio = read(source + path)
-    		vector   = extract_features(audio,sr)
-    
-    		log_likelihood = np.zeros(len(models)) 
-    
-    		for i in range(len(models)):
-        		gmm    = models[i]  #checking with each model one by one
-        		scores = np.array(gmm.score(vector))
-        		log_likelihood[i] = scores.sum()
-    
-    		winner = np.argmax(log_likelihood)
-    		print ("\tdetected as - ", speakers[winner])
+    ## Function for resizing the Image
 
-    		checker_name = path.split("_")[0]
-    		if speakers[winner] != checker_name:
-			error += 1
-    		time.sleep(1.0)
+    def resize_image(self,event):
+        new_width = event.width
+        new_height = event.height
+        global copy_of_image
+        image = copy_of_image.resize((new_width, new_height))
+        global photo
+        photo = ImageTk.PhotoImage(image)
+        global label
+        label.config(image = photo)
+        label.image = photo
 
-	print(error, total_sample)
-	accuracy = ((total_sample - error) / total_sample) * 100
+    def audioplay(self):
+        global fname
+        play_audio(fname)
 
-	print ("The Accuracy Percentage for the current testing Performance with MFCC + GMM is : ", accuracy, "%")
-
-
-print("Hurrey ! Speaker identified. Mission Accomplished Successfully. ")
+    def testaudio(self):
+    	k = test1()
+    	recog(k)
