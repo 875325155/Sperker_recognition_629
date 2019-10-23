@@ -58,7 +58,7 @@ def record():
     wf.close()
 
 
-def test1():
+def test1(take):
 
     #source   = "testfile.wav"
     modelpath = "models\\"
@@ -76,7 +76,7 @@ def test1():
                   in gmm_files]
     # Read the test directory and get the list of test audio files
     print("Do you want to Test a Single Audio: Press '1' or The complete Test Audio Sample: Press '0' ?")
-    take = int(input().strip())
+    take = int(take)
 
     # 触发异常后，后面的代码就不会再执行
     if (take != 0 and take != 1):

@@ -35,8 +35,11 @@ class Testing_file:
         play_button = Button(root, text="Play", bd=0, bg="black", fg="green", font=("Courier",35),command=self.audioplay)
         play_button.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        test_button = Button(root, text="Test", bd=0, bg="black", fg="green", font=("Courier",35),command = self.testaudio)
-        test_button.place(relx=0.5, rely=0.65, anchor=CENTER)
+        test1_button = Button(root, text="Test for Speaker", bd=0, bg="black", fg="green", font=("Courier",35),command = self.testaudio1)
+        test1_button.place(relx=0.5, rely=0.65, anchor=CENTER)
+
+        test2_button = Button(root, text="Test for Voxfage", bd=0, bg="black", fg="green", font=("Courier",35),command = self.testaudio2)
+        test2_button.place(relx=0.5, rely=0.80, anchor=CENTER)
 
         root.mainloop()
 
@@ -56,8 +59,14 @@ class Testing_file:
 
     def audioplay(self):
         global fname
+        #播放最后一次的音频
         play_audio(fname)
 
-    def testaudio(self):
-    	k = test1()
+    def testaudio1(self):
+    	k = test1(take=1)
     	recog(k)
+
+    def testaudio2(self):
+    	k = test1(take=0)
+    	recog(k)
+

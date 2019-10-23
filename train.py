@@ -9,6 +9,7 @@ fname = ''
 
 class Training_file:
     def __init__(self):
+        #设置为弹窗
         root = Toplevel()
         root.title("Speaker Recognition(Train)")
         width = root.winfo_screenwidth()
@@ -34,8 +35,10 @@ class Training_file:
         user_label.place(relx=0.35, rely=0.4, anchor='w')
         global v1
         v1 = StringVar()
+        #设置输入窗
         user_entry = self.EntryWithPlaceholder(root, "Enter the Filename","black",textvariable = v1)
         user_entry.place(relx=0.65, rely=0.4, anchor='e')
+
         user_label = Label(root,bg="black", fg="green", text="Duration(sec)")
         user_label.config(font=("Courier", 20))
         user_label.place(relx=0.35, rely=0.5, anchor='w')
@@ -100,7 +103,7 @@ class Training_file:
         label.image = photo
 
     ## Recording
-
+    #运用trainrecord的方法进行录音
     def reco(self):
             global fname
             global v1,v2
@@ -110,11 +113,11 @@ class Training_file:
                     fname = testr(v1.get())
 
     ## Playing the last recorded
-
+    #播放最近一次录入的音频
     def play(self):
             global fname
             play_audio(fname)
-
+    #进行训练的模块
     def train(self):
             global v1
             traine(v1.get())
