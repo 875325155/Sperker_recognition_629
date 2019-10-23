@@ -4,11 +4,13 @@ from PIL import Image, ImageTk
 from train import *
 from test import *
 
+
 root = Tk()
 root.title("Speaker Recognition")
 width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
 root.geometry("%dx%d" % (width, height))
+# 窗口最大化
 root.state('zoomed')
 
 ## Function for resizing the Image
