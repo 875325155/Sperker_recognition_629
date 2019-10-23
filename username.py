@@ -60,28 +60,29 @@ def record():
 
 def test1(take):
 
-    #source   = "testfile.wav"
-    modelpath = "models\\"
-
-    gmm_files = [os.path.join(modelpath,fname) for fname in
-                  os.listdir(modelpath) if fname.endswith('.gmm')]
-    # print(gmm_files)
-
-    #Load the Gaussian gender Models
-    #pickle.load(file)
-    #反序列化对象，将文件中的数据解析为一个python对象。file中有read()接口和readline()接口
-    #得到模型
-    models    = [pickle.load(open(fname,'rb')) for fname in gmm_files]
-    speakers   = [fname.split("\\")[-1].split(".gmm")[0] for fname
-                  in gmm_files]
-    # Read the test directory and get the list of test audio files
-    print("Do you want to Test a Single Audio: Press '1' or The complete Test Audio Sample: Press '0' ?")
-    take = int(take)
 
     # 触发异常后，后面的代码就不会再执行
     if (take != 0 and take != 1):
         raise ValueError("请输入0或1！")
     if take == 1:
+        # source   = "testfile.wav"
+        modelpath = "models\\"
+
+        gmm_files = [os.path.join(modelpath, fname) for fname in
+                     os.listdir(modelpath) if fname.endswith('.gmm')]
+        # print(gmm_files)
+
+        # Load the Gaussian gender Models
+        # pickle.load(file)
+        # 反序列化对象，将文件中的数据解析为一个python对象。file中有read()接口和readline()接口
+        # 得到模型
+        models = [pickle.load(open(fname, 'rb')) for fname in gmm_files]
+        speakers = [fname.split("\\")[-1].split(".gmm")[0] for fname
+                    in gmm_files]
+        # Read the test directory and get the list of test audio files
+        print("Do you want to Test a Single Audio: Press '1' or The complete Test Audio Sample: Press '0' ?")
+        take = int(take)
+
         path="testfile.wav"
         #rate,sig = wav.read(source+path)
         '''Returns
@@ -118,6 +119,19 @@ def test1(take):
         return result
 
     elif take == 0:
+        modelpath = "Models\\"
+
+        gmm_files = [os.path.join(modelpath, fname) for fname in
+                     os.listdir(modelpath) if fname.endswith('.gmm')]
+        # print(gmm_files)
+
+        # Load the Gaussian gender Models
+        # pickle.load(file)
+        # 反序列化对象，将文件中的数据解析为一个python对象。file中有read()接口和readline()接口
+        # 得到模型
+        models = [pickle.load(open(fname, 'rb')) for fname in gmm_files]
+        speakers = [fname.split("\\")[-1].split(".gmm")[0] for fname
+                    in gmm_files]
         total_sample=0.0
         error=0
         test_file = "testSamplePath.txt"
