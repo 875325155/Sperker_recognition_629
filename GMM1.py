@@ -66,20 +66,37 @@ def list_files_for_speaker(folder):
 
     Returns: list of paths to the wavfiles
     """
-    train_file = "development_Voxforge_enroll.txt"
-    file_paths = open(train_file, 'w')
+    train_file = "train_Voxforge_enroll.txt"
+    test_file = "test_Voxforge_enroll.txt"
+
+    train_paths = open(train_file, 'w')
+    test_paths  = open(test_file, 'w')
     speaker_folders = [d for d in os.listdir(folder)]
     # print(speaker_folders)
-    wav_files = []
+    # wav_files = []
     #d为子目录
     for d in speaker_folders:
-        # print(d)
-        for f in os.listdir(os.path.join(folder, d, 'wav')):
-            # print(f)
-            file_paths.write(os.path.join(d, 'wav', f)+'\n')
-            # wav_files.append(os.path.abspath(os.path.join(folder, d, 'wav', f)))
+        '''
+        此处需要列出文件下所有wav的总数，并且将其5个放入测试txt，5个放入训练txt
+        利用循环遍历来实现
+        '''
+        #得到文件夹的wav文件数
+        a=len(os.listdir(os.path.join(folder, d, 'wav')))
+        count=1
+        if a==10:
+            for f in os.listdir(os.path.join(folder, d, 'wav')):
+                # print(f)
+                if(count<=5):
+                    train_paths.write(os.path.join(d, 'wav', f)+'\n')
+                # wav_files.append(os.path.abspath(os.path.join(folder, d, 'wav', f)))
+                else:
+                    test_paths.write(os.path.join(d, 'wav', f) + '\n')
+                count+=1
+
+
     # return wav_files
-    file_paths.close()
+    test_paths.close()
+    train_paths.close()
 #训练voxforge语料库之中的数据
 def train_voxforge(x):
     file_paths = open("Voxforge_model.txt", 'w')
