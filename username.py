@@ -12,12 +12,28 @@ import scipy.io.wavfile as wav
 from sklearn.mixture import GMM
 import pickle
 import os
+import sys
 import mfeatures
 import warnings
 warnings.filterwarnings("ignore")
 import pyaudio
 import wave
 import time
+
+time_start = time.time()  # 开始计时
+class Logger(object):
+    def __init__(self, fileN="Voxforge.log"):
+        self.terminal = sys.stdout
+        self.log = open(fileN, "w")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.flush()  # 每次写入后刷新到文件中，防止程序意外结束
+
+    def flush(self):
+        self.log.flush()
+
 def record():
 
     CHUNK = 1024
@@ -84,8 +100,7 @@ def test1(take):
         speakers = [fname.split("\\")[-1].split(".gmm")[0] for fname
                     in gmm_files]
         # Read the test directory and get the list of test audio files
-        print("Do you want to Test a Single Audio: Press '1' or The complete Test Audio Sample: Press '0' ?")
-        take = int(take)
+
 
         path="testfile.wav"
         #rate,sig = wav.read(source+path)
@@ -123,7 +138,8 @@ def test1(take):
         return result
 
     elif take == 0:
-        modelpath = "Models\\"
+        modelpath = "Voxforge_models\\"
+        source="Voxforge\\"
 
         gmm_files = [os.path.join(modelpath, fname) for fname in
                      os.listdir(modelpath) if fname.endswith('.gmm')]
@@ -136,38 +152,45 @@ def test1(take):
         models = [pickle.load(open(fname, 'rb')) for fname in gmm_files]
         speakers = [fname.split("\\")[-1].split(".gmm")[0] for fname
                     in gmm_files]
+
+        # print(models)
+        # print(speakers)
+
         total_sample=0.0
         error=0
-        test_file = "testSamplePath.txt"
+        test_file = "test_Voxforge_enroll.txt"
         file_paths = open(test_file, 'r')
 
         # Read the test directory and get the list of test audio files
-        for path in file_paths:
 
+        for path in file_paths:
             total_sample += 1.0
             path = path.strip()
             print("Testing Audio : ", path)
-            sr, audio = wav.read( path)
+            # print(path.split("-")[0])
+            sr, audio = wav.read(os.path.join(source+path))
             vector = mfeatures.extract_features(audio, sr)
 
             log_likelihood = np.zeros(len(models))
 
             for i in range(len(models)):
                 gmm = models[i]  # checking with each model one by one
-            scores = np.array(gmm.score(vector))
-            log_likelihood[i] = scores.sum()
-
+                scores = np.array(gmm.score(vector))
+                log_likelihood[i] = scores.sum()
+                print('speaker '+speakers[i] +"'s score="+str(log_likelihood[i]))
             winner = np.argmax(log_likelihood)
             print("Detected as - ", speakers[winner])
-            checker_name = path.split("_")[0]
+            checker_name = path.split("-")[0]
             if speakers[winner] != checker_name:
                 error += 1
             time.sleep(1.0)
 
-        print(error, total_sample)
+        print('error = '+str(error)+' total sample= '+str(total_sample))
         accuracy = ((total_sample - error) / total_sample) * 100
 
         print("The Accuracy Percentage for the current testing Performance with MFCC + GMM is : ", accuracy, "%")
-
-
-# test1()
+sys.stdout=Logger()
+test1(0)
+time_end = time.time()    #结束计时
+time_c= time_end - time_start   #运行所花时间
+print('time cost', time_c, 's')

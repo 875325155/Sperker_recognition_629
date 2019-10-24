@@ -11,7 +11,7 @@ import warnings
 import mfeatures
 warnings.filterwarnings("ignore")
 
-
+#训练用户的数据
 def traine(x):
     file_paths=open("development_set_enroll.txt" ,'w')
     i=1
@@ -55,7 +55,7 @@ def traine(x):
         count = count + 1
 
 #**********************************************
-#所有语音文件的完整路径
+#得到所有语音文件的完整路径
 voxforge_data_dir = './Voxforge'
 def list_files_for_speaker(folder):
     """
@@ -68,12 +68,13 @@ def list_files_for_speaker(folder):
     """
     train_file = "train_Voxforge_enroll.txt"
     test_file = "test_Voxforge_enroll.txt"
-
+    name_file="Voxforge_model.txt"
     train_paths = open(train_file, 'w')
     test_paths  = open(test_file, 'w')
+    name_paths  = open(name_file, 'w')
     speaker_folders = [d for d in os.listdir(folder)]
     # print(speaker_folders)
-    # wav_files = []
+    wav_files = []
     #d为子目录
     for d in speaker_folders:
         '''
@@ -81,37 +82,41 @@ def list_files_for_speaker(folder):
         利用循环遍历来实现
         '''
         #得到文件夹的wav文件数
-        a=len(os.listdir(os.path.join(folder, d, 'wav')))
-        count=1
-        if a==10:
-            for f in os.listdir(os.path.join(folder, d, 'wav')):
-                # print(f)
-                if(count<=5):
-                    train_paths.write(os.path.join(d, 'wav', f)+'\n')
-                # wav_files.append(os.path.abspath(os.path.join(folder, d, 'wav', f)))
-                else:
-                    test_paths.write(os.path.join(d, 'wav', f) + '\n')
-                count+=1
+        # print(d)
+        if d.split("-")[0] not in wav_files:
+            wav_files.append(d.split("-")[0])
+            a=len(os.listdir(os.path.join(folder, d, 'wav')))
+            count=1
+            if a==10:
+                name_paths.write(d+'\n')
+                for f in os.listdir(os.path.join(folder, d, 'wav')):
+                    # print(f)
+                    if(count<=5):
+                        train_paths.write(os.path.join(d, 'wav', f)+'\n')
+                    # wav_files.append(os.path.abspath(os.path.join(folder, d, 'wav', f)))
+                    else:
+                        test_paths.write(os.path.join(d, 'wav', f) + '\n')
+                    count+=1
 
 
     # return wav_files
     test_paths.close()
     train_paths.close()
+    name_paths.close()
 #训练voxforge语料库之中的数据
-def train_voxforge(x):
-    file_paths = open("Voxforge_model.txt", 'w')
+def train_voxforge():
 
-    i = 1
-    while i < 6:
-        file_paths.write(x + str(i) + ".wav\n")
-        i += 1
-    file_paths.close()
-
+    # file_paths = open("Voxforge_model.txt", 'w')
+    # i = 1
+    # while i < 6:
+    #     file_paths.write(x + str(i) + ".wav\n")
+    #     i += 1
+    # file_paths.close()
     # path to training data
-    source = r"training_data/"
+    source = r"Voxforge/"
     # path where training speakers will be saved
-    dest = r"models/"
-    train_file = "development_set_enroll.txt"
+    dest = r"Voxforge_models/"
+    train_file = "train_Voxforge_enroll.txt"
     file_paths = open(train_file, 'r')
 
     count = 1
@@ -120,6 +125,7 @@ def train_voxforge(x):
     for path in file_paths:
         path = path.strip()
         # read the audio
+        # print(source + path)
         rate, sig = wav.read(source + path)
         mfcc_feat = mfeatures.extract_features(sig, rate)
         # extract MFCC
@@ -141,9 +147,11 @@ def train_voxforge(x):
             count = 0
         count = count + 1
 
-list_files_for_speaker(voxforge_data_dir)
+#得到各个需要的txt
+# list_files_for_speaker(voxforge_data_dir)
+#对voxforge数据进行训练，并进行序列化，将结果保存为.gmm文件
+train_voxforge()
 
-    
     
     
     

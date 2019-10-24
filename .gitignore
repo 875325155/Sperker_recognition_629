@@ -13,3 +13,5 @@ original_targets_batched.pkl
 train_data_batched.pkl
 download.py
 **/__init__.py
+Log.py
+log_file.txt
