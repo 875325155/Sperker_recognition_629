@@ -1,9 +1,6 @@
-from tkinter import *
-from tkinter import ttk
-from PIL import Image, ImageTk
 from record_module import *
 from username import *
-from db import *
+from GUI.db import *
 
 fname = "testfile.wav"
 

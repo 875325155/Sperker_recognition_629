@@ -8,3 +8,7 @@ __pycache__
 /.idea
 /.__pycache__
 what to do next.md
+help
+original_targets_batched.pkl
+train_data_batched.pkl
+download.py

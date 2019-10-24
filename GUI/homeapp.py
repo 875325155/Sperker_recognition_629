@@ -1,8 +1,5 @@
-from tkinter import *
-from tkinter import ttk
-from PIL import Image, ImageTk
-from train import *
-from test import *
+from GUI.train import *
+from GUI.test import *
 
 
 root = Tk()

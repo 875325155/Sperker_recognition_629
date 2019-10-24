@@ -2,7 +2,7 @@
 """
 @author: GENESIS
 """
-
+#进行识别的模块
 
 import numpy as np
 import scipy
@@ -59,7 +59,11 @@ def record():
 
 
 def test1(take):
+    '''
 
+    :param take: 1->a single wav to verify who speaker  0->to test a model
+    :return:
+    '''
 
     # 触发异常后，后面的代码就不会再执行
     if (take != 0 and take != 1):
