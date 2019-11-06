@@ -1,0 +1,1 @@
+增加VAD即Voice Activity Detection，即语音活动检查，进行对声音的预处理

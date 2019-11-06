@@ -13,7 +13,7 @@ from sklearn.mixture import GMM
 import pickle
 import os
 import sys
-import mfeatures
+import MFCC_features
 import warnings
 warnings.filterwarnings("ignore")
 import pyaudio
@@ -113,7 +113,7 @@ def test1(take):
         '''
         rate,sig = wav.read(path)
         #得到mfcc
-        mfcc_feat=mfeatures.extract_features(sig,rate)
+        mfcc_feat=MFCC_features.extract_features(sig, rate)
 
         log_likelihood = np.zeros(len(models))
 
@@ -169,7 +169,7 @@ def test1(take):
             print("Testing Audio : ", path)
             # print(path.split("-")[0])
             sr, audio = wav.read(os.path.join(source+path))
-            vector = mfeatures.extract_features(audio, sr)
+            vector = MFCC_features.extract_features(audio, sr)
 
             log_likelihood = np.zeros(len(models))
 

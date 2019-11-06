@@ -8,7 +8,7 @@ from sklearn.mixture import GMM
 import pickle
 import os
 import warnings
-import mfeatures
+import MFCC_features
 warnings.filterwarnings("ignore")
 
 #训练用户的数据
@@ -34,7 +34,7 @@ def traine(x):
         path = path.strip()
         # read the audio
         rate,sig = wav.read(source+path)
-        mfcc_feat=mfeatures.extract_features(sig,rate)
+        mfcc_feat=MFCC_features.extract_features(sig, rate)
         # extract MFCC 
         
         if features.size == 0:
@@ -127,7 +127,7 @@ def train_voxforge():
         # read the audio
         # print(source + path)
         rate, sig = wav.read(source + path)
-        mfcc_feat = mfeatures.extract_features(sig, rate)
+        mfcc_feat = MFCC_features.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
