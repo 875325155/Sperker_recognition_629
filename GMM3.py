@@ -8,11 +8,12 @@ from sklearn.mixture import GMM
 import pickle
 import os
 import warnings
-import Mel_filterbank_energy_features
+import MFCC_features
 
 warnings.filterwarnings("ignore")
 
-#采用Mel-filterbank energy feature作为参数
+
+# 采用Log Filterbank Energies为参数
 
 
 # 训练用户的数据
@@ -38,13 +39,13 @@ def traine(x):
         path = path.strip()
         # read the audio
         rate, sig = wav.read(source + path)
-        mfe_feat = Mel_filterbank_energy_features.extract_features(sig, rate)
+        mfcc_feat = MFCC_features.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
-            features = mfe_feat
+            features = mfcc_feat
         else:
-            features = np.vstack((features, mfe_feat))
+            features = np.vstack((features, mfcc_feat))
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:
@@ -122,7 +123,7 @@ def train_voxforge():
     # path to training data
     source = r"Voxforge/"
     # path where training speakers will be saved
-    dest = r"Voxforge_models/model_2_mfe/"
+    dest = r"Voxforge_models/model_3_lfe/"
     if not os.path.exists(dest):  # 如果路径不存在
         os.makedirs(dest)
     train_file = "train_Voxforge_enroll.txt"
@@ -136,13 +137,13 @@ def train_voxforge():
         # read the audio
         # print(source + path)
         rate, sig = wav.read(source + path)
-        mfe_feat = Mel_filterbank_energy_features.extract_features(sig, rate)
+        mfcc_feat = MFCC_features.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
-            features = mfe_feat
+            features = mfcc_feat
         else:
-            features = np.vstack((features, mfe_feat))
+            features = np.vstack((features, mfcc_feat))
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:

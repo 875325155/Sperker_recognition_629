@@ -33,11 +33,11 @@ def calculate_delta(array):
 
 
 def extract_features(audio, rate):
-    """extract 20 dim mfcc features from an audio, performs CMS and combines
+    """extract 20 dim mfcc features from an audio, performs CMS and combines 
     delta to make it 40 dim feature vector"""
 
-    mfe_feat = mfcc.fbank(audio, rate, 0.025, 0.01, 20)
-    mfe_feat = preprocessing.scale(mfe_feat)
-    delta = calculate_delta(mfe_feat)
-    combined = np.hstack((mfe_feat, delta))
+    lfe = mfcc.logfbank(audio, rate, 0.025, 0.01, 20)
+    lfe = preprocessing.scale(lfe)
+    delta = calculate_delta(lfe)
+    combined = np.hstack((lfe, delta))
     return combined

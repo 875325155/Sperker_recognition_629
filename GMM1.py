@@ -106,6 +106,7 @@ def list_files_for_speaker(folder):
     test_paths.close()
     train_paths.close()
     name_paths.close()
+
 #训练voxforge语料库之中的数据
 def train_voxforge():
 
@@ -118,7 +119,9 @@ def train_voxforge():
     # path to training data
     source = r"Voxforge/"
     # path where training speakers will be saved
-    dest = r"Voxforge_models/"
+    dest = r"Voxforge_models/model_1_mfcc/"
+    if not os.path.exists(dest):  # 如果路径不存在
+        os.makedirs(dest)
     train_file = "train_Voxforge_enroll.txt"
     file_paths = open(train_file, 'r')
 
@@ -140,6 +143,7 @@ def train_voxforge():
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:
+            print(path.split("-")[0]+'is training!')
             gmm = GMM(n_components=16, n_iter=200, covariance_type='diag', n_init=10)
             gmm.fit(features)
 

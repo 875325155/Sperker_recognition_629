@@ -20,6 +20,8 @@ import pyaudio
 import wave
 import time
 
+#测试文件
+
 time_start = time.time()  # 开始计时
 class Logger(object):
     def __init__(self, fileN="Voxforge.log"):
