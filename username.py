@@ -23,6 +23,7 @@ import time
 #测试文件
 
 time_start = time.time()  # 开始计时
+#此为log记录器
 class Logger(object):
     def __init__(self, fileN="Voxforge.log"):
         self.terminal = sys.stdout
@@ -140,6 +141,7 @@ def test1(take):
         return result
 
     elif take == 0:
+
         modelpath = "Voxforge_models\\"
         source="Voxforge\\"
 
@@ -191,6 +193,10 @@ def test1(take):
         accuracy = ((total_sample - error) / total_sample) * 100
 
         print("The Accuracy Percentage for the current testing Performance with MFCC + GMM is : ", accuracy, "%")
+
+        time_end = time.time()  # 结束计时
+        time_c = time_end - time_start  # 运行所花时间
+        print('time cost', time_c, 's')
 sys.stdout=Logger()
 test1(0)
 time_end = time.time()    #结束计时

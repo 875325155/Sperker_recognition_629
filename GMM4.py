@@ -8,7 +8,7 @@ from sklearn.mixture import GMM
 import pickle
 import os
 import warnings
-import Log_Filterbank_Energies
+import Spectral_Subband_Centroids
 
 warnings.filterwarnings("ignore")
 
@@ -39,13 +39,13 @@ def traine(x):
         path = path.strip()
         # read the audio
         rate, sig = wav.read(source + path)
-        lfe_feat = Log_Filterbank_Energies.extract_features(sig, rate)
+        ssc_feat = Spectral_Subband_Centroids.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
-            features = lfe_feat
+            features = ssc_feat
         else:
-            features = np.vstack((features, lfe_feat))
+            features = np.vstack((features, ssc_feat))
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:
@@ -123,7 +123,7 @@ def train_voxforge():
     # path to training data
     source = r"Voxforge/"
     # path where training speakers will be saved
-    dest = r"Voxforge_models/model_3_lfe/"
+    dest = r"Voxforge_models/model_4_ssc/"
     if not os.path.exists(dest):  # 如果路径不存在
         os.makedirs(dest)
     train_file = "train_Voxforge_enroll.txt"
@@ -137,13 +137,13 @@ def train_voxforge():
         # read the audio
         # print(source + path)
         rate, sig = wav.read(source + path)
-        lfe_feat = Log_Filterbank_Energies.extract_features(sig, rate)
+        ssc_feat = Spectral_Subband_Centroids.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
-            features = lfe_feat
+            features = ssc_feat
         else:
-            features = np.vstack((features, lfe_feat))
+            features = np.vstack((features, ssc_feat))
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:
