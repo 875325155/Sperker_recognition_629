@@ -11,6 +11,9 @@ import warnings
 import MFCC_features
 warnings.filterwarnings("ignore")
 
+#采用MFCC为参数
+
+
 #训练用户的数据
 def traine(x):
     file_paths=open("development_set_enroll.txt" ,'w')

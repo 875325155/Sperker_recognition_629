@@ -12,6 +12,8 @@ import MFCC_features
 
 warnings.filterwarnings("ignore")
 
+#采用Mel-filterbank energy feature作为参数
+
 
 # 训练用户的数据
 def traine(x):
@@ -36,13 +38,13 @@ def traine(x):
         path = path.strip()
         # read the audio
         rate, sig = wav.read(source + path)
-        mfcc_feat = MFCC_features.extract_features(sig, rate)
+        mfe_feat = MFCC_features.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
-            features = mfcc_feat
+            features = mfe_feat
         else:
-            features = np.vstack((features, mfcc_feat))
+            features = np.vstack((features, mfe_feat))
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:
@@ -132,13 +134,13 @@ def train_voxforge():
         # read the audio
         # print(source + path)
         rate, sig = wav.read(source + path)
-        mfcc_feat = MFCC_features.extract_features(sig, rate)
+        mfe_feat = MFCC_features.extract_features(sig, rate)
         # extract MFCC
 
         if features.size == 0:
-            features = mfcc_feat
+            features = mfe_feat
         else:
-            features = np.vstack((features, mfcc_feat))
+            features = np.vstack((features, mfe_feat))
         # when features of 5 files of speaker are concatenated, then do model training
         # 这里可以修改为更多的count，可以为一个实验的点
         if count == 5:
