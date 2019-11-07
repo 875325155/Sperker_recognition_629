@@ -25,7 +25,7 @@ import time
 time_start = time.time()  # 开始计时
 #此为log记录器
 class Logger(object):
-    def __init__(self, fileN="Voxforge.log"):
+    def __init__(self, fileN="Voxforge_mfcc.log"):
         self.terminal = sys.stdout
         self.log = open(fileN, "w")
 
@@ -144,7 +144,9 @@ def test1(take):
 
         modelpath = "Voxforge_models\\"
         source="Voxforge\\"
-
+        gmm_model_folder=os.listdir(modelpath)
+        # print(gmm_model_folder)
+        modelpath+=gmm_model_folder[0]+'\\'
         gmm_files = [os.path.join(modelpath, fname) for fname in
                      os.listdir(modelpath) if fname.endswith('.gmm')]
         # print(gmm_files)
@@ -194,9 +196,7 @@ def test1(take):
 
         print("The Accuracy Percentage for the current testing Performance with MFCC + GMM is : ", accuracy, "%")
 
-        time_end = time.time()  # 结束计时
-        time_c = time_end - time_start  # 运行所花时间
-        print('time cost', time_c, 's')
+
 sys.stdout=Logger()
 test1(0)
 time_end = time.time()    #结束计时
