@@ -1,4 +1,3 @@
-
 from noisered import NoiseReduction
 from silence import remove_silence
 from ltsd import LTSD_VAD
@@ -21,7 +20,7 @@ class VAD(object):
 
     def filter(self, fs, signal):
         if not self.initted:
-            raise "NoiseFilter Not Initialized"
+            raise ("NoiseFilter Not Initialized")
 #        nred = self.nr.filter(fs, signal)
 #        removed = remove_silence(fs, nred)
 #        self.ltsd.plot_ltsd(fs, nred)
