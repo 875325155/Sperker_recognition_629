@@ -1,0 +1,72 @@
+import numpy as np
+import scipy
+from python_speech_features import mfcc
+from python_speech_features import logfbank
+import scipy.io.wavfile as wav
+from sklearn.mixture import GMM
+import pickle
+import os
+import warnings
+import mfeatures
+warnings.filterwarnings("ignore")
+def traine(x):
+    file_paths=open("development_set_enroll.txt" ,'w')
+    i=1
+    while i<6:
+        file_paths.write(x+str(i)+".wav\n")
+        i+=1
+    file_paths.close()
+    #path to training data
+    source   = r"training_data/"
+    #path where training speakers will be saved
+    dest = r"models/"
+    train_file = "development_set_enroll.txt"        
+    file_paths = open(train_file,'r')
+    count = 1
+    # Extracting features for each speaker (5 files per speakers)为每个录音者提取特性(每个录音者5个文件)
+    features = np.asarray(()) # 将结构数据转化为ndarray   经过 tolist  可变成数组 asarray 默认情况下不会主动拷贝
+    for path in file_paths:    
+        path = path.strip() # 移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。只能删除开头或结尾的字符，不能删除中间部分的字符。
+        # read the audio
+        rate,sig = wav.read(source+path)
+        mfcc_feat=mfeatures.extract_features(sig,rate)
+        #  features_filtered=select_features(extracted_features,y,fdr_level=0.5)
+#原因:fdr_level参数默认值为fdr_level=defaults.FDR_LEVEL 即0.05
+#这里的0.05相当于统计学中的p值,表示用于特征过滤的一个标准(阈值),值越小,特征过滤越严格,保留下来的特征越少,
+#所以调高fdr_level即可保留下来更多特征.(这里调整为0.5,也可以调的更高)
+        # extract MFCC 
+        if features.size == 0:
+            features = mfcc_feat
+        else:
+            features = np.vstack((features, mfcc_feat)
+#//np.vstack()按垂直方向（行顺序）堆叠数组构成一个新的数组 堆叠的数组需要具有相同的维度 np.hstack() 按水平方向（列顺序）堆叠数组
+        # when features of 5 files of speaker are concatenated, then do model training
+        if count == 5:    
+            gmm = GMM(n_components = 16, n_iter = 200, covariance_type='diag',n_init = 10)   # 部件   通路  协方差
+#n_components 用来模拟的高斯曲线的条数
+
+#它的默认设置是convariance_type=’diag’,意思是簇在每个维度的尺寸都可以单独设置，
+#但椭圆边界的主轴要与坐标轴平行。
+#GMM模型中的超参数convariance_type控制这每个簇的形状自由度。
+            gmm.fit(features)
+#fit函数返回一个History的对象，其History.history属性记录了损失函数和其他指标的数值随epoch变化的情况，
+#如果有验证集的话，也包含了验证集的这些指标变化情况
+            # dumping the trained gaussian model 转存训练好的高斯模型
+            picklefile = path.split("-")[0]+".gmm"
+            pickle.dump(gmm,open(dest + picklefile,'wb'))
+#DUMP( expression [, return_format] [, start_position] [, length] )
+#expression：要分析的表达式。 
+#return_format：决定了返回值的格式，该参数可以是以下任何值： 
+#     ● 8 ：八进制符号 
+#     ● 10 ：十进制符号 
+#     ● 16 ：十六进制符号 
+#     ● 17 ：单个字符 
+#     ● 1008 ：带字符集名称的八进制符号 
+#     ● 1010 ：带字符集名称的十进制符号 
+#     ● 1016 ：带字符集名称的十六进制符号 
+#     ● 1017 ：带字符集名称的单个字符 
+#start_position ：可选的，要返回的内部表示的起始位置。 
+#length ：可选的，要返回的内部表示的长度。
+            features = np.asarray(())
+            count = 0
+        count = count + 1
